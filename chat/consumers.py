@@ -27,27 +27,31 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-    # Receive message from WebSocket
     async def receive(self, text_data):
         print('message received')
 
         text_data_json = json.loads(text_data)
+        event = text_data_json['event']
         message = text_data_json['message']
 
-        # Send message to room group
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message
-            }
-        )
+        if event == 'handler_1':
+            await self.handler_1(message)
+        elif event == 'handler_2':
+            await self.handler_2(message)
+        elif event == 'handler_3':
+            await self.handler_3(message)
 
-    # Receive message from room group
-    async def chat_message(self, event):
-        message = event['message']
+    async def handler_1(self, message):
+        print('Handling "handler_1" event')
+        print(message)
+        # Process the message for "handler_1" event
 
-        # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': message
-        }))
+    async def handler_2(self, message):
+        print('Handling "handler_2" event')
+        print(message)
+        # Process the message for "handler_2" event
+
+    async def handler_3(self, message):
+        print('Handling "handler_3" event')
+        print(message)
+        # Process the message for "handler_3" event
